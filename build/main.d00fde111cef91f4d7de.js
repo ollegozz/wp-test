@@ -1,0 +1,1 @@
+(()=>{"use strict";console.log("test123123"),console.log(151)})();

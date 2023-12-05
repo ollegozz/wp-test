@@ -11,7 +11,7 @@ interface EnvVariables {
     port: number;
 }
 
-export default (env: EnvVariables) => {    
+export default (env: EnvVariables) => {
 
     const isDev = env.mode === 'development'
 
@@ -25,8 +25,9 @@ export default (env: EnvVariables) => {
         },
         plugins: [
             new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'public', 'index.html') }),
-            new webpack.ProgressPlugin()
-        ],
+            // медленный
+            isDev && new webpack.ProgressPlugin()
+        ].filter(Boolean),
         module: {
             rules: [
                 {
@@ -39,10 +40,10 @@ export default (env: EnvVariables) => {
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
         },
-        devtool: isDev ? 'inline-source-map' : false,
+        devtool: isDev && 'inline-source-map',
         devServer: isDev ? {
             port: env.port ?? 5000,
-            open: true            
+            open: true
         } : undefined
     }
     return config
