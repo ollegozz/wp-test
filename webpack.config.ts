@@ -7,10 +7,14 @@ import type { Configuration as DevServerConfiguration } from "webpack-dev-server
 type Mode = 'production' | 'development';
 
 interface EnvVariables {
-    mode: Mode
+    mode: Mode;
+    port: number;
 }
 
 export default (env: EnvVariables) => {    
+
+    const isDev = env.mode === 'development'
+
     const config: webpack.Configuration = {
         mode: env.mode ?? 'development',
         entry: path.resolve(__dirname, 'src', 'index.ts'),
@@ -35,10 +39,15 @@ export default (env: EnvVariables) => {
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
         },
-        devServer: {
-            port: 5000,
+        devtool: isDev ? 'inline-source-map' : false,
+        devServer: isDev ? {
+            port: env.port ?? 5000,
             open: true            
-        }
+        } : undefined
     }
     return config
 };
+
+
+// npm start -- --env port=5000
+// npm start -- --env mode='development'
